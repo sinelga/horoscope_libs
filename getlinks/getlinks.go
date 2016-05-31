@@ -2,15 +2,15 @@ package getlinks
 
 import (
 	"fmt"
+	"github.com/sinelga/horoscope_libs/domains"
+	"github.com/yhat/scrape"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 	"net/http"
-	"github.com/yhat/scrape"
-	"github.com/sinelga/horoscope_libs/domains"
 	"time"
 )
 
-func GetLinks(urlstr string) []domains.Linkinfo{
+func GetLinks(urlstr string) []domains.Linkinfo {
 
 	fmt.Println(urlstr)
 	resp, err := http.Get(urlstr)
@@ -31,18 +31,17 @@ func GetLinks(urlstr string) []domains.Linkinfo{
 		}
 		return false
 	}
-//	fortuneresors := &domains.Fortuneresors{}
+	//	fortuneresors := &domains.Fortuneresors{}
 
 	grid, ok := scrape.Find(root, scrape.ByClass("grid"))
-	
-var arrLinkinfo []domains.Linkinfo
+
+	var arrLinkinfo []domains.Linkinfo
 	if ok {
 
 		gridItems := scrape.FindAll(grid, matcher)
 
-//		fortuneresors.Site.Site = "test.com"
+		//		fortuneresors.Site.Site = "test.com"
 		var now = time.Now()
-		
 
 		for _, itemA := range gridItems {
 
@@ -57,12 +56,12 @@ var arrLinkinfo []domains.Linkinfo
 			fmt.Println(scrape.Attr(itemA, "href"))
 
 		}
-//		fortuneresors.Links = arrLinkinfo
+		//		fortuneresors.Links = arrLinkinfo
 
 	}
 
 	//	fortuneresors.Site="test.com"
 
-//	fmt.Println(fortuneresors)
+	//	fmt.Println(fortuneresors)
 	return arrLinkinfo
 }
