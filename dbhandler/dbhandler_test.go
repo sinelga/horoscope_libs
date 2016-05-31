@@ -2,7 +2,7 @@ package dbhandler
 
 import (
 	"gopkg.in/mgo.v2"
-//	"gopkg.in/mgo.v2/bson"
+	//	"gopkg.in/mgo.v2/bson"
 	"testing"
 )
 
@@ -13,18 +13,17 @@ func TestCheckIfExist(t *testing.T) {
 		panic(err)
 	}
 	defer session.Close()
-	
-	result :=CheckIfExist(*session,"test.com","link")
-	
+
+	result := CheckIfExist(*session, "test.com", "link3")
+
 	if result {
-//		t.Error("Cant be TRUE")
-		
-		CheckIfLinksExist(*session,"test.com","link")
-		
+		//		t.Error("Cant be TRUE")
+
+		CheckIfLinksExist(*session, "test.com", "link3")
+
 	} else {
-	
-	InsertNewSite(*session, "test.com","link2") 
+
+		InsertNewSite(*session, "test.com", "link3")
 	}
-	
 
 }

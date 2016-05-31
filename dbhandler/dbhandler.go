@@ -7,7 +7,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"time"
-	
 )
 
 func CheckIfExist(session mgo.Session, site string, link string) bool {
@@ -59,23 +58,47 @@ func InsertNewSite(session mgo.Session, site string, link string) {
 		log.Fatal(err)
 	}
 
-	//	item :=c.Find(bson.M{"Site": site}).Limit(1)
-
 }
 
 func CheckIfLinksExist(session mgo.Session, site string, link string) {
-	
-		session.SetMode(mgo.Monotonic, true)
+
+	session.SetMode(mgo.Monotonic, true)
 
 	c := session.DB("horoscope").C("arch")
-	
-	var sitetocheck domains.Fortuneresors 
 
-	c.Find(bson.M{"site.site": site}).One(&sitetocheck)
+	var sitetocheck domains.Fortuneresors
+	var now = time.Now()
 	
-	fmt.Println(sitetocheck)	
-	
-	
+	sitebson :=bson.M{"site.site": site}
+	c.Find(sitebson).One(&sitetocheck)
+
+	set := make(map[string]struct{})
+
+	for _, links := range sitetocheck.Site.Links {
+
+		fmt.Println("links", links.Link)
+		set[links.Link] = struct{}{}
+
+	}
+
+	if _, ok := set[link]; ok {
+
+		fmt.Println("element found")
+	} else {
+		fmt.Println("element not found")
+
+		linkinfo := domains.Linkinfo{
+			Created_at: now,
+			Type:       "daily_horoscope",
+			Link:       link,
+		}
+
+		modsite := sitetocheck
+
+		modsite.Links = append(modsite.Links, linkinfo)
+		
+		c.Update(sitebson,modsite)
+
+	}
+
 }
-
-

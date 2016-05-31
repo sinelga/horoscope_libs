@@ -36,11 +36,11 @@ func GetLinks(urlstr string) []domains.Linkinfo {
 	grid, ok := scrape.Find(root, scrape.ByClass("grid"))
 
 	var arrLinkinfo []domains.Linkinfo
+
 	if ok {
 
 		gridItems := scrape.FindAll(grid, matcher)
 
-		//		fortuneresors.Site.Site = "test.com"
 		var now = time.Now()
 
 		for _, itemA := range gridItems {
@@ -53,15 +53,13 @@ func GetLinks(urlstr string) []domains.Linkinfo {
 
 			arrLinkinfo = append(arrLinkinfo, linkinfo)
 
-			fmt.Println(scrape.Attr(itemA, "href"))
+//			fmt.Println(scrape.Attr(itemA, "href"))
 
 		}
 		//		fortuneresors.Links = arrLinkinfo
 
 	}
 
-	//	fortuneresors.Site="test.com"
 
-	//	fmt.Println(fortuneresors)
 	return arrLinkinfo
 }
