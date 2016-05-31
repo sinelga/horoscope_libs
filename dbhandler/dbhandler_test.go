@@ -17,11 +17,14 @@ func TestCheckIfExist(t *testing.T) {
 	result :=CheckIfExist(*session,"test.com","link")
 	
 	if result {
-		t.Error("Cant be TRUE")
+//		t.Error("Cant be TRUE")
 		
-	}
+		CheckIfLinksExist(*session,"test.com","link")
+		
+	} else {
 	
 	InsertNewSite(*session, "test.com","link2") 
+	}
 	
 
 }

@@ -7,6 +7,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"time"
+	
 )
 
 func CheckIfExist(session mgo.Session, site string, link string) bool {
@@ -15,7 +16,7 @@ func CheckIfExist(session mgo.Session, site string, link string) bool {
 
 	c := session.DB("horoscope").C("arch")
 
-	count, err := c.Find(bson.M{"Site": site}).Limit(1).Count()
+	count, err := c.Find(bson.M{"site.site": site}).Limit(1).Count()
 
 	if err != nil {
 
@@ -37,7 +38,7 @@ func InsertNewSite(session mgo.Session, site string, link string) {
 
 	fortuneresors := &domains.Fortuneresors{}
 
-	fortuneresors.Site.Site = "test.com"
+	fortuneresors.Site.Site = "test2.com"
 
 	var now = time.Now()
 	var arrLinkinfo []domains.Linkinfo
@@ -61,3 +62,20 @@ func InsertNewSite(session mgo.Session, site string, link string) {
 	//	item :=c.Find(bson.M{"Site": site}).Limit(1)
 
 }
+
+func CheckIfLinksExist(session mgo.Session, site string, link string) {
+	
+		session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB("horoscope").C("arch")
+	
+	var sitetocheck domains.Fortuneresors 
+
+	c.Find(bson.M{"site.site": site}).One(&sitetocheck)
+	
+	fmt.Println(sitetocheck)	
+	
+	
+}
+
+
