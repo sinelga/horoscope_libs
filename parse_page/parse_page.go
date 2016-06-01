@@ -28,7 +28,6 @@ func Parse(urlstr string) {
 
 		for _, pr := range prs {
 
-			//			fmt.Println("pr",scrape.Text(pr))
 
 			next, ok := scrape.Find(pr.NextSibling.NextSibling.NextSibling.NextSibling, scrape.ByTag(atom.P))
 

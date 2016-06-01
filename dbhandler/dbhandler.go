@@ -9,6 +9,36 @@ import (
 	"time"
 )
 
+func ZodiacContents(session mgo.Session, site string) []string {
+
+	session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB("horoscope").C("arch")
+
+	var sitetocheck domains.Fortuneresors
+	sitebson := bson.M{"site.site": site}
+
+	c.Find(sitebson).One(&sitetocheck)
+
+	//	fmt.Println(sitetocheck)
+
+	var tofeedzodiaclinks []string
+
+	for _, linkinfo := range sitetocheck.Links {
+
+		if len(linkinfo.Zodiacs) == 0 {
+
+			fmt.Println(linkinfo.Link)
+			tofeedzodiaclinks = append(tofeedzodiaclinks, linkinfo.Link)
+
+		}
+
+	}
+
+	return tofeedzodiaclinks
+
+}
+
 func CheckIfExist(session mgo.Session, site string, link string) bool {
 
 	session.SetMode(mgo.Monotonic, true)
@@ -37,7 +67,7 @@ func InsertNewSite(session mgo.Session, site string, link string) {
 
 	fortuneresors := &domains.Fortuneresors{}
 
-	fortuneresors.Site.Site = "test2.com"
+	fortuneresors.Site.Site = site
 
 	var now = time.Now()
 	var arrLinkinfo []domains.Linkinfo
@@ -68,8 +98,8 @@ func CheckIfLinksExist(session mgo.Session, site string, link string) {
 
 	var sitetocheck domains.Fortuneresors
 	var now = time.Now()
-	
-	sitebson :=bson.M{"site.site": site}
+
+	sitebson := bson.M{"site.site": site}
 	c.Find(sitebson).One(&sitetocheck)
 
 	set := make(map[string]struct{})
@@ -96,8 +126,8 @@ func CheckIfLinksExist(session mgo.Session, site string, link string) {
 		modsite := sitetocheck
 
 		modsite.Links = append(modsite.Links, linkinfo)
-		
-		c.Update(sitebson,modsite)
+
+		c.Update(sitebson, modsite)
 
 	}
 

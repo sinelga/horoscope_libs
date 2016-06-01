@@ -4,6 +4,7 @@ import (
 	"gopkg.in/mgo.v2"
 	//	"gopkg.in/mgo.v2/bson"
 	"testing"
+	
 )
 
 func TestCheckIfExist(t *testing.T) {
@@ -25,5 +26,8 @@ func TestCheckIfExist(t *testing.T) {
 
 		InsertNewSite(*session, "test.com", "link3")
 	}
+	
+	ZodiacContents(*session, "test.com")
+	
 
 }
