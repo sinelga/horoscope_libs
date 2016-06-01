@@ -9,6 +9,34 @@ import (
 	"time"
 )
 
+func GetAllContents(session mgo.Session, site string) []string {
+	session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB("horoscope").C("arch")
+
+	var sitetocheck domains.Fortuneresors
+	sitebson := bson.M{"site.site": site}
+	c.Find(sitebson).One(&sitetocheck)
+
+	var contentsarr []string
+
+	for _, linkinfo := range sitetocheck.Links {
+		if len(linkinfo.Zodiacs) > 0 {
+
+			for _, zodiac := range linkinfo.Zodiacs {
+
+//				fmt.Println(zodiac.Contents)
+
+				contentsarr = append(contentsarr, zodiac.Contents)
+
+			}
+
+		}
+
+	}
+	return contentsarr
+}
+
 func UpdateContents(session mgo.Session, site string, link string, zodiacs []domains.Zodiac) {
 	session.SetMode(mgo.Monotonic, true)
 
@@ -23,7 +51,7 @@ func UpdateContents(session mgo.Session, site string, link string, zodiacs []dom
 		if linkinfo.Link == link {
 
 			sitetocheck.Links[i].Zodiacs = zodiacs
-			c.Update(sitebson, sitetocheck)			
+			c.Update(sitebson, sitetocheck)
 
 		}
 
