@@ -9,6 +9,28 @@ import (
 	"time"
 )
 
+func UpdateContents(session mgo.Session, site string, link string, zodiacs []domains.Zodiac) {
+	session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB("horoscope").C("arch")
+
+	var sitetocheck domains.Fortuneresors
+	sitebson := bson.M{"site.site": site}
+	c.Find(sitebson).One(&sitetocheck)
+
+	for i, linkinfo := range sitetocheck.Links {
+
+		if linkinfo.Link == link {
+
+			sitetocheck.Links[i].Zodiacs = zodiacs
+			c.Update(sitebson, sitetocheck)			
+
+		}
+
+	}
+
+}
+
 func ZodiacContents(session mgo.Session, site string) []string {
 
 	session.SetMode(mgo.Monotonic, true)
